@@ -15,7 +15,7 @@ let initTable = () => {
         gameContainer.append(table);
         gameContainer.append(controllerView(table, size));
     } else {
-        console.log("Размер поля очень мал")
+        alert("Размер поля очень мал")
     }
 };
 

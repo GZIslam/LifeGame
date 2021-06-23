@@ -6,6 +6,7 @@ const configView = () => {
     
     tableSize.innerText = "Введите размер поля NxN";
     tableSizeField.type = "number";
+    tableSizeField.value = 55;
     applyButton.innerText = "Создать";
 
     tableSize.append(tableSizeField);
