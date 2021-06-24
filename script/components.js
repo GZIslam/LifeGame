@@ -146,8 +146,6 @@ const controllerView = (table, size) => {
     let newLifeCell = [];
     let newDieCell = [];
 
-    let step = true;
-
     let prevLive = [];
     let prevDeath = [];
     let prevLiveCombination = false;
@@ -158,19 +156,13 @@ const controllerView = (table, size) => {
         for(let i = 0; i < size; i++){
             for(let j = 0; j < size; j++) {
                 let count = table.checkAround(j, i);
-                if(count >= 3 && !table.data[j][i].state) {
+                if(count == 3 && !table.data[j][i].state) {
                     newLifeCell.push(table.data[j][i]);
                 }
             }
         }
-        if(prevLive.join() == newLifeCell.join()) prevLiveCombination = true;
+        if(JSON.stringify(prevLive) == JSON.stringify(newLifeCell)) prevLiveCombination = true;
         prevLive = newLifeCell.slice(0);
-        if(newLifeCell.length > 0) {
-            newLifeCell.forEach(cell => {
-                table.changeCell(cell);
-            });
-        } 
-        step = false;
     };
 
     let killLoners = () => {
@@ -183,19 +175,24 @@ const controllerView = (table, size) => {
                 }
             }
         }
-        if(prevDeath.join() == newDieCell.join()) prevDeathCombination = true;
+        if(JSON.stringify(prevDeath) == JSON.stringify(newDieCell)) prevDeathCombination = true;
         prevDeath = newDieCell.slice(0);
+    };
+
+    let updateTable = () => {
+        createLife();
+        killLoners();
+        if(newLifeCell.length > 0) {
+            newLifeCell.forEach(cell => {
+                table.changeCell(cell);
+            });
+        }
         if(newDieCell.length > 0) {
             newDieCell.forEach(cell => {
                 table.changeCell(cell);
             });
         } 
-        step = true;
-    };
-
-    let updateTable = () => {
-        step? createLife() : killLoners();
-        if(prevLiveCombination && prevDeathCombination) {
+        if(prevLiveCombination == true && prevDeathCombination == true) {
             alert("Game over");
             clearInterval(updateSpeed);
             updateSpeed = undefined;
